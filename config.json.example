@@ -1,0 +1,7 @@
+{
+    "TIMEOUT": 10,
+    "VERIFY": false,
+    "USERNAME": "yourusername",
+    "PASSWORD": "yourpassword",
+    "PERCEPXION_HOST": "api.gopercepxion.ai"
+}

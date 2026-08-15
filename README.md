@@ -1,16 +1,17 @@
 # slc9000-api-notebook
-Jupyter notebook for testing the SLC9000 API
 
-# SLC9000 API Jupyter Notebook
+Jupyter notebook for testing the SLC9000 API.
+
+## SLC9000 API Jupyter Notebook
 
 This repository contains a Jupyter notebook (`slc9000_api.ipynb`) that demonstrates how to interact with an SLC9000 device via its REST API.
 
 ## Prerequisites
 
-- Python 3.10+ installed
-- `git` installed
-- Access to an SLC9000 device and credentials
-- Optional but recommended: `python -m venv` available for virtual environments
+- Python 3.10+ installed  
+- `git` installed  
+- Access to an SLC9000 device and credentials  
+- Optional but recommended: `python -m venv` available for virtual environments  
 
 ## 1. Clone the repository
 
@@ -43,93 +44,70 @@ On Windows (PowerShell):
 .\.venv\Scripts\Activate.ps1
 ```
 
-On Windows (Command Prompt):
-
-```cmd
-.\.venv\Scripts\activate.bat
-```
-
-You should see `(.venv)` at the beginning of your shell prompt once it is activated.
-
 ## 3. Install dependencies
 
-The project dependencies are listed in `requirements.txt`. Install them with:
+From the root of the repository (with the virtual environment activated):
 
 ```bash
-pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-## 4. Set environment variables
+## 4. Configure connection settings
 
-The notebook expects the following environment variables to be set so it can authenticate to the SLC9000:
+The notebook can be configured in **two ways**: environment variables or a `config.json` file.
 
-- `SLC9K_USER` — API username
-- `SLC9K_PW` — API password
+### Option A: Environment variables
 
-On macOS / Linux:
+Set the following environment variables before starting Jupyter:
+
+- `SLC9K_USER` – username for the SLC9000 (e.g. `sysadmin`)  
+- `SLC9K_PW` – password for the SLC9000  
+- `PERCEPXION_HOST` – Percepxion cloud endpoint host (e.g. `api.gopercepxion.ai`)  
+
+Example (macOS / Linux):
 
 ```bash
-export SLC9K_USER="your-username"
-export SLC9K_PW="your-password"
+export SLC9K_USER=youruser
+export SLC9K_PW=yourpassword
+export PERCEPXION_HOST=api.gopercepxion.ai
 ```
 
-On Windows (PowerShell):
+### Option B: `config.json` file
 
-```powershell
-$env:SLC9K_USER="your-username"
-$env:SLC9K_PW="your-password"
+Instead of environment variables, you can use the provided `config.json` file. The notebook’s `load_config` function reads this file and populates the connection settings.
+
+Create or edit `config.json` in the repository root with content like:
+
+```json
+{
+  "TIMEOUT": 10,
+  "VERIFY": false,
+  "USERNAME": "youruser",
+  "PASSWORD": "yourpassword",
+  "PERCEPXION_HOST": "api.gopercepxion.ai"
+}
 ```
 
-On Windows (Command Prompt):
+On startup, the notebook calls:
 
-```cmd
-set SLC9K_USER=your-username
-set SLC9K_PW=your-password
+```python
+load_config()
 ```
 
-Alternatively, you can use the `config.json` file as described in the notebook to provide connection and authentication settings.
+which updates the global `TIMEOUT`, `VERIFY`, `USERNAME`, `PASSWORD`, and `PERCEPXION_HOST` values from this file. Any values not present in `config.json` will fall back to their existing defaults (or environment variables, if you choose to use both).
 
-## 5. Launch JupyterLab (or Jupyter Notebook)
+## 5. Launch JupyterLab / Jupyter Notebook
 
-From the activated virtual environment in the repo root, start Jupyter:
+From the repository root (with the virtual environment activated):
 
 ```bash
 jupyter lab
 ```
 
-or, if you prefer the classic interface:
+or
 
 ```bash
 jupyter notebook
 ```
 
-This will open Jupyter in your default web browser.
-
-## 6. Open and run the notebook
-
-1. In the Jupyter UI, navigate to the repository folder.
-2. Open `slc9000_api.ipynb`.
-3. Run the cells in order (e.g., using **Run → Run All Cells** or `Shift+Enter` per cell).
-
-The notebook will:
-
-- Configure a `requests` session for the SLC9000 API.
-- Optionally load settings from `config.json`.
-- Authenticate to the SLC9000 and obtain a session token.
-- Demonstrate various API calls (status, firmware, network interfaces, etc.).
-- Show a workaround for PUT request timeouts using `curl`.
-
-## 7. Deactivate the virtual environment
-
-When you are finished, you can deactivate the virtual environment with:
-
-```bash
-deactivate
-```
-
-## Troubleshooting
-
-- If `requests` to the SLC9000 fail with TLS/SSL errors, verify that the `VERIFY` setting and certificate handling match your environment.
-- Ensure the SLC9000 IP address and credentials in `config.json` or environment variables are correct.
-- If Jupyter does not open automatically, copy the URL printed in the terminal (including the token) and paste it into your browser.
+Then open `slc9000_api.ipynb` and run the cells from top to bottom to authenticate to the SLC9000, inspect system status, and exercise the various REST API endpoints.
